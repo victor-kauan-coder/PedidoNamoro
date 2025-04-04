@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedido de Namoro 💖</title>
+    <style>
+      :root {
+        --rosa-claro: #ffb6c1;
+        --rosa-escuro: #ff69b4;
+        --vermelho: #ff3b77;
+        --verde: #4caf50;
+        --branco: #fff;
+        --sombra: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--rosa-claro),
+          var(--rosa-escuro)
+        );
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      .coracao {
+        position: absolute;
+        font-size: 20px;
+        animation: float 4s ease-in-out infinite;
+        opacity: 0.6;
+        z-index: 0;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(10deg);
+        }
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: var(--sombra);
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+        position: relative;
+        z-index: 10;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transform-style: preserve-3d;
+        perspective: 1000px;
+      }
+
+      h1 {
+        color: var(--vermelho);
+        font-size: 2.2rem;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        position: relative;
+        display: inline-block;
+      }
+
+      h1::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: var(--rosa-escuro);
+        border-radius: 3px;
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease, opacity 0.3s ease;
+        font-weight: bold;
+        min-width: 120px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      #btnSim {
+        background: var(--verde);
+        color: var(--branco);
+      }
+
+      #btnSim:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+      }
+
+      #btnSim::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      #btnSim:hover::before {
+        left: 100%;
+      }
+
+      #btnNao {
+        background: #f44336;
+        color: var(--branco);
+      }
+
+      #btnNao:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(244, 67, 54, 0.4);
+      }
+
+      #mensagem {
+        display: none;
+        background: var(--branco);
+        padding: 30px;
+        border-radius: 15px;
+        margin-top: 30px;
+        box-shadow: var(--sombra);
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #mensagem h2 {
+        color: var(--rosa-escuro);
+        margin-bottom: 15px;
+        font-size: 1.8rem;
+      }
+
+      #mensagem p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      #mensagem img {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: var(--sombra);
+        margin-top: 15px;
+        transition: transform 0.3s ease;
+      }
+
+      #mensagem img:hover {
+        transform: scale(1.02);
+      }
+
+      /* Confetes melhorados */
+      .confetti {
+        position: fixed;
+        width: 15px;
+        height: 15px;
+        background-color: #f00;
+        opacity: 0;
+        animation: confetti-fall 3s ease-in forwards;
+        z-index: 100;
+        pointer-events: none;
+        top: -20px;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(0) rotate(0deg) translateX(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg)
+            translateX(calc((var(--random) - 0.5) * 200px));
+          opacity: 0;
+        }
+      }
+
+      /* Efeito de brilho */
+      .brilho {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+      }
+
+      .brilho span {
+        position: absolute;
+        display: block;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: animar-brilho 5s linear infinite;
+      }
+
+      @keyframes animar-brilho {
+        0% {
+          transform: translateY(-100px) scale(0);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) scale(1);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="brilho" id="brilho"></div>
+
+    <!-- Corações flutuantes de fundo -->
+    <div id="coracoes"></div>
+
+    <div class="container">
+      <h1>Amor, quer namorar comigo? ❤️</h1>
+      <div class="buttons">
+        <button id="btnSim">Sim 💖</button>
+        <button id="btnNao">Não 💔</button>
+      </div>
+      <div id="mensagem">
+        <h2>Você disse SIM! 🎉😍</h2>
+        <p>
+          Você é a garota mais incrível e especial que eu já pude conhecer eu te
+          amo com cada partezinha do meu corpo, amo tanto vc que nenhuma medida
+          do mundo é capaz de mensurar.Você é a minha princesa e eu te amarei
+          pra sempre, sempre,sempre. Você é my loverrrr ❤️
+        </p>
+        <img src="../static/foto_amor.jpg" alt="Casal apaixonado" />
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const btnSim = document.getElementById("btnSim");
+        const btnNao = document.getElementById("btnNao");
+        const mensagem = document.getElementById("mensagem");
+        const coracoes = document.getElementById("coracoes");
+        const brilho = document.getElementById("brilho");
+
+        // Criar corações flutuantes de fundo
+        for (let i = 0; i < 15; i++) {
+          const coracao = document.createElement("div");
+          coracao.className = "coracao";
+          coracao.innerHTML = "❤️";
+          coracao.style.left = Math.random() * 100 + "vw";
+          coracao.style.top = Math.random() * 100 + "vh";
+          coracao.style.animationDelay = Math.random() * 5 + "s";
+          coracao.style.fontSize = Math.random() * 20 + 10 + "px";
+          coracoes.appendChild(coracao);
+        }
+
+        // Criar partículas de brilho
+        for (let i = 0; i < 20; i++) {
+          const span = document.createElement("span");
+          span.style.left = Math.random() * 100 + "vw";
+          span.style.animationDelay = Math.random() * 5 + "s";
+          span.style.width = Math.random() * 15 + 5 + "px";
+          span.style.height = span.style.width;
+          brilho.appendChild(span);
+        }
+
+        // Função para criar confetes melhorados
+        function createConfetti() {
+          const colors = [
+            "#ff0000",
+            "#00ff00",
+            "#0000ff",
+            "#ffff00",
+            "#ff00ff",
+            "#00ffff",
+            "#ff8800",
+            "#ff0088",
+          ];
+          const shapes = ["circle", "rectangle", "triangle"];
+          const confettiCount = 200;
+
+          for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement("div");
+            confetti.className = "confetti";
+
+            // Cor aleatória
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            // Tamanho aleatório
+            const size = Math.random() * 10 + 8;
+
+            // Tempo de animação aleatório
+            const duration = Math.random() * 2 + 2;
+
+            // Atraso aleatório
+            const delay = Math.random() * 1;
+
+            // Posição inicial no topo da tela
+            const startX = Math.random() * window.innerWidth;
+
+            // Definir propriedades CSS personalizadas
+            confetti.style.setProperty("--random", Math.random());
+
+            // Aplicar estilos
+            confetti.style.left = startX + "px";
+            confetti.style.backgroundColor = color;
+            confetti.style.width = size + "px";
+            confetti.style.height = size + "px";
+            confetti.style.animationDuration = duration + "s";
+            confetti.style.animationDelay = delay + "s";
+
+            // Forma aleatória
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+            if (shape === "circle") {
+              confetti.style.borderRadius = "50%";
+            } else if (shape === "triangle") {
+              confetti.style.clipPath = "polygon(50% 0%, 0% 100%, 100% 100%)";
+              confetti.style.height = size * 0.866 + "px"; // Altura do triângulo equilátero
+            }
+
+            document.body.appendChild(confetti);
+
+            // Remover após a animação terminar
+            setTimeout(() => {
+              confetti.remove();
+            }, (duration + delay) * 1000);
+          }
+        }
+
+        // Evento para o botão Sim
+        btnSim.addEventListener("click", function () {
+          // Criar confetes
+          createConfetti();
+
+          // Efeito de desaparecimento suave dos botões
+          btnSim.style.opacity = "0";
+          btnNao.style.opacity = "0";
+
+          // Esconder os botões após a transição
+          setTimeout(() => {
+            btnSim.style.display = "none";
+            btnNao.style.display = "none";
+          }, 300);
+
+          // Mostrar mensagem
+          mensagem.style.display = "block";
+
+          // Rolagem suave para a mensagem
+          mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          // Efeito de vibração no botão
+          this.style.transform = "scale(1.1)";
+          setTimeout(() => {
+            this.style.transform = "scale(1)";
+          }, 300);
+        });
+
+        // Evento para o botão Não
+        btnNao.addEventListener("click", function () {
+          // Obter as dimensões do botão
+          const btnWidth = this.offsetWidth;
+          const btnHeight = this.offsetHeight;
+
+          // Calcular os limites máximos de movimento (com margem de 20px)
+          const maxX = window.innerWidth - btnWidth - 20;
+          const maxY = window.innerHeight - btnHeight - 20;
+
+          // Garantir que as novas posições estejam dentro dos limites
+          const novaX = Math.max(20, Math.random() * maxX);
+          const novaY = Math.max(20, Math.random() * maxY);
+
+          // Aplicar a nova posição
+          this.style.position = "fixed";
+          this.style.left = novaX + "px";
+          this.style.top = novaY + "px";
+
+          // Efeito de vibração
+          this.style.transform = "rotate(5deg)";
+          setTimeout(() => {
+            this.style.transform = "rotate(-5deg)";
+            setTimeout(() => {
+              this.style.transform = "rotate(0)";
+            }, 100);
+          }, 100);
+        });
+      });
+    </script>
+  </body>
+</html>
